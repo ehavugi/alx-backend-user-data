@@ -10,6 +10,7 @@ import time
 import datetime
 
 conv = datetime.datetime.fromtimestamp
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -51,3 +52,11 @@ class RedactingFormatter(logging.Formatter):
         ascii_time = conv(record.created).strftime('%Y-%m-%d %H:%M:%S,%f3')
         return str(self.FORMAT % {"name": r.name, "levelname": r.levelname,
                    "asctime": ascii_time, "message": redactedmsg})
+
+
+def get_logger() -> logging.Logger:
+    logger = loggin.Logger('user_data')
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    logger.addHandler(RedactingFormatter(PII_FIELDS))
+    return logger
