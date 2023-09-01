@@ -8,6 +8,9 @@ import re
 import logging
 import time
 import datetime
+import os
+import mysql
+import mysql.connector.connection as connectori
 
 conv = datetime.datetime.fromtimestamp
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
@@ -55,8 +58,22 @@ class RedactingFormatter(logging.Formatter):
 
 
 def get_logger() -> logging.Logger:
-    logger = loggin.Logger('user_data')
+    """get logger function rerurns logging.Logger
+    with redactingformatter class initialized with PII_fields
+    """
+    logger = logging.Logger('user_data')
     logger.setLevel(logging.INFO)
     logger.propagate = False
-    logger.addHandler(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(RedactingFormatter(list(PII_FIELDS)))
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    user = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.environ.get('PERSONAL_DATA_DB_PASSWORD', "")
+    host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
+    db = os.environ.get('PERSONAL_DATA_DB_NAME')
+
+    conn = connectori.MySQLConnection(user=user, database=db,
+                                      host=host, password=password)
+    return conn
