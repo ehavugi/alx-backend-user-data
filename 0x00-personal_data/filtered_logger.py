@@ -14,7 +14,8 @@ conv = datetime.datetime.fromtimestamp
 
 def filter_datum(fields: List[str], redaction: str,
                  message: str, seperator: str) -> str:
-    """return a redacted test without values for fields
+    """return a redacted test without values for fields.
+    uses a separator to separate fields.
     """
     for field in fields:
         replacement = "{}={}{}".format(field, redaction, seperator)
@@ -24,14 +25,19 @@ def filter_datum(fields: List[str], redaction: str,
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
+    """ Redacting Formatter class.
+    Class initializer
+    format function
     """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields) -> None:
+    def __init__(self, fields: List[str]) -> None:
+        """Initialization of redactionFormatter.
+        with fields
+        """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
@@ -42,6 +48,6 @@ class RedactingFormatter(logging.Formatter):
         r = record
         redactedmsg = filter_datum(self.fields, self.REDACTION,
                                    str(record.msg), self.SEPARATOR)
-        ascii_time = conv(record.created).strftime('%Y-%m-%d %H:%M:%S')
-        return str(self.FORMAT % {"name": r.name, "levelname": r.name,
+        ascii_time = conv(record.created).strftime('%Y-%m-%d %H:%M:%S,%f3')
+        return str(self.FORMAT % {"name": r.name, "levelname": r.levelname,
                    "asctime": ascii_time, "message": redactedmsg})
