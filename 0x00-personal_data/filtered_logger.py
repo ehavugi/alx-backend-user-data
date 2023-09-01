@@ -10,7 +10,7 @@ import time
 import datetime
 import os
 import mysql
-import mysql.connector.connection as connectori
+import mysql.connector as connectori
 
 conv = datetime.datetime.fromtimestamp
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
@@ -55,9 +55,11 @@ def get_logger() -> logging.Logger:
     with redactingformatter class initialized with PII_fields
     """
     logger = logging.Logger('user_data')
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger.setLevel(logging.INFO)
     logger.propagate = False
-    logger.addHandler(RedactingFormatter(list(PII_FIELDS)))
+    logger.addHandler(stream_handler)
     return logger
 
 
@@ -67,8 +69,8 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
     db = os.environ.get('PERSONAL_DATA_DB_NAME')
 
-    conn = connectori.MySQLConnection(user=user, database=db,
-                                      host=host, password=password)
+    conn = connectori.connect(user=user, database=db,
+                              host=host, password=password)
     return conn
 
 
