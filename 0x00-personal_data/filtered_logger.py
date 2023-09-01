@@ -73,13 +73,19 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 
 def main() -> None:
+    """DB connection and data formatting.
+    """
     conn = get_db()
     cur = conn.cursor(buffered=True)
-    cur.execute("SELECT * from users;")
-    print(cur.fetchone())
+    cur.execute("""SELECT name, email, phone, ssn, password, ip,
+                last_login, user_agent from users;""")
+    for row in cur.fetchall():
+        (name, email, phone, ssn, password, ip, last_login, user_agent) = row
+        f = "[HOLBERTON] user_data INFO: name=***; email=***; phone=***; "
+        f2 = "ssn=***; password=***; ip={}; last_login={}; user_agent={}"
+        print(f + f2.format(ip, last_login, user_agent))
     cur.close()
     conn.close()
-    print("hello")
     return None
 
 
