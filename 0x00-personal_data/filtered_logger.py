@@ -13,7 +13,7 @@ import mysql
 import mysql.connector as connectori
 
 conv = datetime.datetime.fromtimestamp
-PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -62,7 +62,7 @@ def get_logger() -> logging.Logger:
     logger.setLevel(logging.INFO)
     logger.propagate = False
     logger.addHandler(stream_handler)
-    return logger
+    return logging.getLogger('user_data')
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
