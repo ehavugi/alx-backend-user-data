@@ -19,9 +19,10 @@ PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
 def filter_datum(fields: List[str], redaction: str,
                  message: str, seperator: str) -> str:
     """return a redacted test without values for fields."""
+    msg = message
     for field in fields:
         msg = re.sub(r'{}=[^{}]+{}'.format(field, seperator, seperator),
-                     "{}={}{}".format(field, redaction, seperator), message)
+                     "{}={}{}".format(field, redaction, seperator), msg)
     return msg
 
 
