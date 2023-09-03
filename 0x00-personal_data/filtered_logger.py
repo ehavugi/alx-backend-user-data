@@ -16,11 +16,12 @@ conv = datetime.datetime.fromtimestamp
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'ip')
 
 
-def filter_datum(fields: List[str], reda: str, msg: str, sep: str) -> str:
+def filter_datum(fields: List[str], redaction: str,
+                 message: str, seperator: str) -> str:
     """return a redacted test without values for fields."""
     for field in fields:
-        rep = "{}={}{}".format(field, reda, sep)
-        msg = re.sub(r'{}=[^{}]+{}'.format(field, sep, sep), rep, msg)
+        msg = re.sub(r'{}=[^{}]+{}'.format(field, seperator, seperator),
+                     "{}={}{}".format(field, redaction, seperator), message)
     return msg
 
 
@@ -34,7 +35,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: List[str]) -> None:
+    def __init__(self, fields: List[str]):
         """Initialization of redactionFormatter.
         with fields
         """
@@ -64,6 +65,8 @@ def get_logger() -> logging.Logger:
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
+    """Get db connection and return a connect to be used
+    """
     user = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
     password = os.environ.get('PERSONAL_DATA_DB_PASSWORD', "")
     host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
