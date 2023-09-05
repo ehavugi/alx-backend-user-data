@@ -14,7 +14,8 @@ class Auth():
         pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """A authorization handler
+        """A authorization handler.
+           updated to handle path exclusion with * at the end.
         """
         if path is None:
             return True
@@ -26,7 +27,10 @@ class Auth():
             return False
         if str(path) + "/" in excluded_paths:
             return False
-
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith("*"):
+                if path.startswith(excluded_path[:-1]):
+                    return False
         return True
 
     def authorization_header(self, request=None) -> str:
