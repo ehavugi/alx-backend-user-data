@@ -97,5 +97,4 @@ class BasicAuth(Auth):
         decoded = decoded_base64_authorization_header.split(":")
         if len(decoded) == 2:
             return decoded[0], decoded[1]
-        
         return decoded[0], ":".join(decoded[1:])
