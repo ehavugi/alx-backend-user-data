@@ -2,6 +2,6 @@ Flask==1.1.2
 Flask-Cors==3.0.8
 Jinja2
 requests==2.18.4
-werkzeug==2.0.3
+werkzeug==2.2.3
 markupsafe==2.0.1
 pycodestyle==2.5.0
