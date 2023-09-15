@@ -19,7 +19,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -38,7 +38,7 @@ class DB:
         """
         self._session.add(User(email=email, hashed_password=hashed_password))
         self._session.commit()
-        return self._session.query(User).filter(
+        return self.__session.query(User).filter(
                 User.email == email and
                 User.hashed_password == hashed_password).all()[0]
 
@@ -46,7 +46,7 @@ class DB:
         for key in args:
             if not hasattr(User, key):
                 raise InvalidRequestError
-        a = self._session.query(User).filter_by(**args).all()
+        a = self.__session.query(User).filter_by(**args).all()
         if len(a) == 0:
             raise NoResultFound
         return a[0]
