@@ -1,6 +1,6 @@
 # 0x03. User authentication service
 ## mandatory
-- [ ] 0. User model
+- [x] 0. User model
 - [ ] 1. create user
 - [ ] 2. Find user
 - [ ] 3. update user
